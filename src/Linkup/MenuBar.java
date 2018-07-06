@@ -50,7 +50,7 @@ public class MenuBar extends JMenuBar {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				JOptionPane.showMessageDialog(null,"∑Ω∫Í¡÷NB!");
+				JOptionPane.showMessageDialog(null,"Xiaofangdyd NB!");
 			}
 		});
 	}
