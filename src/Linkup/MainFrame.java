@@ -151,6 +151,8 @@ public class MainFrame extends JFrame {
 					}
 				}else {
 					JOptionPane.showMessageDialog(MainFrame.this, "无可连接的图标，已刷新界面");
+					Core.refreshArr(mapPanel.arr);
+					repaint();
 				}
 			}
 
