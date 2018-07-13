@@ -12,14 +12,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-import tools.Core;
-import tools.Param;
+import tools.Algorithm;
+import tools.Data;
 
 @SuppressWarnings("serial")
 public class MainFrame extends JFrame {
-	MapPanel mapPanel = new MapPanel(this);
-	int prompt = Param.promptCountAll; //提示次数
-	int refresh = Param.refreshCountAll; //刷新次数
+	Map map = new Map(this);
+	int prompt = Data.promptCountAll; //提示次数
+	int refresh = Data.refreshCountAll; //刷新次数
 	
 	JLabel labelStart = new LinkedJLabel("开始");
 	JLabel labelPrompt = new LinkedJLabel("提示(" + prompt + ")");
@@ -65,8 +65,8 @@ public class MainFrame extends JFrame {
 		this.add(labelScore);
 		this.add(timerJProgressbar);
 		
-		mapPanel.setBounds(0, 0, 1000, 625);
-		this.add(mapPanel);
+		map.setBounds(0, 0, 1000, 625);
+		this.add(map);
 		
 		/* 开始游戏 */
 		labelStart.addMouseListener(new MouseAdapter() {
@@ -74,19 +74,19 @@ public class MainFrame extends JFrame {
 			public void mousePressed(MouseEvent e) {
 				String text = labelStart.getText();
 				if ("开始".equals(text)) {
-					Param.gameStatus = 1;
+					Data.gameStatus = 1;
 					labelStart.setText("暂停");
 					
 					timerJProgressbar.start();
 					repaint();
 				}else if ("暂停".equals(text)) {
-					Param.gameStatus = 2;
+					Data.gameStatus = 2;
 					labelStart.setText("继续");
 					
 					timerJProgressbar.stop();
 					repaint();
 				}else if ("继续".equals(text)) {
-					Param.gameStatus = 1;
+					Data.gameStatus = 1;
 					labelStart.setText("暂停");
 					
 					timerJProgressbar.start();
@@ -101,7 +101,7 @@ public class MainFrame extends JFrame {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (Param.gameStatus != 1) {
+				if (Data.gameStatus != 1) {
 					JOptionPane.showMessageDialog(MainFrame.this, "操作非法！请先开始游戏");
 					return;
 				}
@@ -111,7 +111,7 @@ public class MainFrame extends JFrame {
 				
 				if (refresh > 0) {
 					refresh--;
-					Core.refreshArr(mapPanel.arr);
+					Algorithm.refreshArr(map.arr);
 					repaint();
 					labelRefresh.setText("刷新(" + refresh + ")");
 				}else {
@@ -123,14 +123,14 @@ public class MainFrame extends JFrame {
 		}); 
 		
 		/* 提示 
-		 * 调用Core中的promptArr实现
+		 * 调用Algorithm中的promptArr实现
 		 * 若成功，返回两个图标的list<Point>
 		 * 若失败，返回null，执行刷新图标操作 */
 		labelPrompt.addMouseListener(new MouseAdapter() {
 			@SuppressWarnings("deprecation")
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (Param.gameStatus != 1) {
+				if (Data.gameStatus != 1) {
 					JOptionPane.showMessageDialog(MainFrame.this, "操作非法！请先开始游戏");
 					return;
 				}
@@ -138,20 +138,20 @@ public class MainFrame extends JFrame {
 					return;
 				}
 				
-				List<Point> list = Core.promptArr(mapPanel.arr);
+				List<Point> list = Algorithm.promptArr(map.arr);
 				if(list != null) {
 					if (prompt > 0) {
 						prompt--;
 						labelPrompt.setText("提示(" + prompt + ")");
-						mapPanel.drawMyRect(list.get(0), Color.yellow);
-						mapPanel.drawMyRect(list.get(1), Color.yellow);
+						map.drawMyRect(list.get(0), Color.yellow);
+						map.drawMyRect(list.get(1), Color.yellow);
 					}else {
 						JOptionPane.showMessageDialog(MainFrame.this, "提示次数已用完！");
 						return;
 					}
 				}else {
 					JOptionPane.showMessageDialog(MainFrame.this, "无可连接的图标，已刷新界面");
-					Core.refreshArr(mapPanel.arr);
+					Algorithm.refreshArr(map.arr);
 					repaint();
 				}
 			}
@@ -176,31 +176,36 @@ public class MainFrame extends JFrame {
 	}
 	
 	public void restartGame() {
-		if (Param.gameStatus == 1) {
-			Param.score = 0;
-			prompt = Param.promptCountAll;
-			refresh = Param.refreshCountAll;
-		}else if(Param.gameStatus == 4) {
-			Param.gameStatus = 1;
+		if (Data.gameStatus == 1) {
+			Data.score = 0;
+			prompt = Data.promptCountAll;
+			refresh = Data.refreshCountAll;
+		}else if(Data.gameStatus == 4) {
+			Data.gameStatus = 1;
 			prompt++;
 			refresh++;
 		}
-		Param.chessCount = 80;
+		else if(Data.gameStatus == 0) {
+			Data.gameStatus = 1;
+			prompt = Data.promptCountAll;
+			refresh = Data.refreshCountAll;
+		}
+		Data.BlockCount = 80;
 		timerJProgressbar.reset();
 		labelPrompt.setText("提示(" + prompt + ")");
 		labelRefresh.setText("刷新(" + refresh + ")");
-		labelScore.setText("当前成绩：" + Param.score);
-		mapPanel.initBoard();
+		labelScore.setText("当前成绩：" + Data.score);
+		map.initBoard();
 		labelStart.setText("暂停");
 		timerJProgressbar.start();
 		repaint();
 	}
-	/* 重绘界面，供MapPanel调用 */
+	/* 重绘界面，供Map调用 */
 	public void PaintFrame() {
 		repaint();
 	}
 	
-	/* 暂停倒计时，供MapPanel调用 */
+	/* 暂停倒计时，供Map调用 */
 	public void StopTimer() {
 		timerJProgressbar.stop();
 	}
@@ -211,6 +216,4 @@ public class MainFrame extends JFrame {
 		labelScore.setText("当前成绩：" + score);
 		return score;
 	}
-	
-
 }

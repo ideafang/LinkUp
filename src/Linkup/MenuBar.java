@@ -8,12 +8,12 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
-import Dialog.ParamJDialog;
+import Dialog.DataJDialog;
 
 @SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
 
-	JMenuItem menuItemParam = new JMenuItem("游戏参数");
+	JMenuItem menuItemData = new JMenuItem("游戏数据");
 	JMenuItem menuItemJoke = new JMenuItem("不要点");
 	
 	MainFrame mainFrame;
@@ -24,7 +24,7 @@ public class MenuBar extends JMenuBar {
 	
 	private void init() {
 		JMenu menuSet = new JMenu("设置");
-		menuSet.add(menuItemParam);
+		menuSet.add(menuItemData);
 		//menuSet.addSeparator();
 		
 		JMenu menuAbout = new JMenu("关于");
@@ -34,12 +34,12 @@ public class MenuBar extends JMenuBar {
 		this.add(menuAbout);
 		
 		/* 游戏参数修改响应 */
-		menuItemParam.addActionListener(new ActionListener() {
+		menuItemData.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				new ParamJDialog(mainFrame);
+				new DataJDialog(mainFrame);
 			}
 			
 		});

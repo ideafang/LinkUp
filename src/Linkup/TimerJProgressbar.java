@@ -7,12 +7,12 @@ import java.awt.event.ActionListener;
 import javax.swing.JProgressBar;
 import javax.swing.Timer;
 
-import tools.Param;
+import tools.Data;
 
 @SuppressWarnings("serial")
 public class TimerJProgressbar extends JProgressBar implements ActionListener {
 
-	int count = Param.timeCount;
+	int count = Data.timeCount;
 	Timer timer = new Timer(1000, this);
 	MainFrame mainFrame;
 	
@@ -35,7 +35,7 @@ public class TimerJProgressbar extends JProgressBar implements ActionListener {
 	
 	public void reset() {
 		timer.stop();
-		count = Param.timeCount;
+		count = Data.timeCount;
 		this.setMaximum(count);
 		this.setValue(count);
 		this.setString(count + "√Î");
@@ -50,7 +50,7 @@ public class TimerJProgressbar extends JProgressBar implements ActionListener {
 			this.setString(count + "√Î");
 		}else if (count < 0) {
 			timer.stop();
-			Param.gameStatus = 3;
+			Data.gameStatus = 3;
 			mainFrame.PaintFrame();
 		}
 	}
